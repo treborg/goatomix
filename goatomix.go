@@ -3,14 +3,19 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
+
+	"github.com/treborg/goatomix/levelsets"
 )
 
 func main() {
-	bytes, err := os.ReadFile("levels/draknek.json")
+	ls, err := levelsets.Read("levels/draknek.json")
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(bytes))
+	fmt.Println(ls.Name)
+
+	fmt.Println(len(ls.Levels))
+	l := ls.Levels[1]
+	fmt.Printf("level:1 %T\n", l)
 
 }
