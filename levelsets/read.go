@@ -27,8 +27,8 @@ func Read(fn string) (*LevelSet, error) {
 			levelSet.Name = v.(string)
 		case "credits":
 			levelSet.Credit = v.(string)
-		case "licence":
-			levelSet.Licence = v.(string)
+		case "license":
+			levelSet.License = v.(string)
 		}
 	}
 
@@ -60,7 +60,7 @@ func Read(fn string) (*LevelSet, error) {
 	}
 	levelSet.Levels = oLevels
 
-	return levelSet, err
+	return levelSet, nil
 }
 
 func grid(v []interface{}) [][]byte {
@@ -72,15 +72,15 @@ func grid(v []interface{}) [][]byte {
 	return grid
 }
 
-// LevelSet a struct to hold levelset
+// LevelSet a struct to hold a levelset.
 type LevelSet struct {
 	Name    string
 	Credit  string
-	Licence string
+	License string
 	Levels  []Level
 }
 
-// Level - a struct to hold levels
+// Level - a struct to hold a level.
 type Level struct {
 	Name     string
 	ID       string
