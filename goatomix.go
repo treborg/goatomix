@@ -10,7 +10,7 @@ import (
 func main() {
 	ls, err := levelsets.Read("levels/draknek.json")
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("Error: ", err)
 	}
 	fmt.Println(ls.Name)
 
