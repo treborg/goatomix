@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"reflect"
 )
 
 // Read a JSON file
@@ -20,13 +21,19 @@ func Read(fn string) (*LevelSet, error) {
 		err      error     = nil
 		ord      int       = -1
 		levelSet *LevelSet = &LevelSet{}
-		errFmt   string    = "'%s', Level: %d, Key: '%s', wanted string got %T"
 	)
 
 	// start utility functions
+
+	isString := func(v interface{}) bool {
+		return reflect.TypeOf(v).Kind() == reflect.String
+	}
+
 	toString := func(k string, v interface{}) (string, error) {
-		if !tt(v, "") {
-			return "", fmt.Errorf(errFmt, fn, ord, k, v)
+		if !isString(v) {
+			return "", fmt.Errorf(
+				"'%s', Level: %d, Key: '%s', wanted string got %T",
+				fn, ord, k, v)
 		}
 		return v.(string), nil
 	}
@@ -34,14 +41,24 @@ func Read(fn string) (*LevelSet, error) {
 	toGrid := func(k string, v interface{}) ([][]byte, error) {
 
 		grid := [][]byte{}
-		fmt.Printf("%s, type: %T\n", v, v)
-		for _, line := range v.([]interface{}) {
-			b := []byte(line.(string))
-			grid = append(grid, b)
+
+		kind := reflect.TypeOf(v).Kind()
+		if kind != reflect.Slice {
+			return grid, fmt.Errorf(
+				"'%s', Level %d, Key: %s wanted slice got %s",
+				fn, ord, k, kind,
+			)
 		}
-		//*/
+
+		for _, line := range v.([]interface{}) {
+			if isString(line) {
+				b := []byte(line.(string))
+				grid = append(grid, b)
+			}
+		}
 		return grid, nil
 	}
+
 	// end utility
 
 	bytes, err := os.ReadFile(fn)
