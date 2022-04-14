@@ -34,21 +34,12 @@ func Read(fn string) (*LevelSet, error) {
 	toGrid := func(k string, v interface{}) ([][]byte, error) {
 
 		grid := [][]byte{}
-
-		if tt(v, []interface{}{}) {
-			return grid, fmt.Errorf(
-				"'%s', Level: %d, Key: '%s', wanted string got %T",
-				fn, ord, k, v,
-			)
-		}
-		v = []string(v.([]string))
 		fmt.Printf("%s, type: %T\n", v, v)
-		/*
-			for _, line := range v {
-				b := []byte(line.(string))
-				grid = append(grid, b)
-			}
-			//*/
+		for _, line := range v.([]interface{}) {
+			b := []byte(line.(string))
+			grid = append(grid, b)
+		}
+		//*/
 		return grid, nil
 	}
 	// end utility
