@@ -1,30 +1,21 @@
 package levelsets
 
-import (
-	"reflect"
-)
-
 // LevelSet a struct to hold a levelset.
 type LevelSet struct {
-	Name    string
-	Credit  string
-	License string
-	Levels  []Level
+	Name    string  `json:"name"`
+	Credit  string  `json:"credit"`
+	License string  `json:"license"`
+	Levels  []Level `json:"levels"`
 }
 
 // Level - a struct to hold a level.
 type Level struct {
-	Name     string
-	ID       string
-	Formula  string
-	Atoms    map[byte]([]byte)
-	Arena    [][]byte
-	Molecule [][]byte
-}
+	Name    string `json:"name"`
+	ID      string `json:"id"`
+	Formula string `json:"formula"`
 
-func tt(x interface{}, y interface{}) bool {
+	Arena    []string `json:"arena"`
+	Molecule []string `json:"molecule"`
 
-	v := reflect.TypeOf(x)
-	w := reflect.TypeOf(y)
-	return v == w
+	Atoms map[string][]string `json:"atoms"`
 }
