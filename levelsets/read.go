@@ -19,6 +19,7 @@ func Read(fn string) (LevelSet, error) {
 		level.Order = i + 1
 
 		a, ok1 := bytesToSlice(level.ArenaS)
+
 		level.Arena = Arena(a)
 
 		m, ok2 := bytesToSlice(level.MoleculeS)
@@ -27,6 +28,8 @@ func Read(fn string) (LevelSet, error) {
 		if !(ok1 && ok2) {
 			err = fmt.Errorf("(%s)level: %d, rows in arenas or molecules must have the same length", fn, level.Order)
 		}
+		// fmt.Printf("arena: %#[1]v\n%[1]T\n\n", Arena(a))
+		Arena(a).Show()
 	}
 	return levelset, err
 }

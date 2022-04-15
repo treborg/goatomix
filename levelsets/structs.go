@@ -20,8 +20,8 @@ type Level struct {
 	Atoms map[string][]string `json:"atoms"`
 
 	Order    int
-	Arena    [][]byte
-	Molecule [][]byte
+	Arena    Arena
+	Molecule Molecule
 }
 
 // Molecule represents a Levels molecule
