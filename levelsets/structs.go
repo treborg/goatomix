@@ -14,8 +14,18 @@ type Level struct {
 	ID      string `json:"id"`
 	Formula string `json:"formula"`
 
-	Arena    []string `json:"arena"`
-	Molecule []string `json:"molecule"`
+	ArenaS    []string `json:"arena"`
+	MoleculeS []string `json:"molecule"`
 
 	Atoms map[string][]string `json:"atoms"`
+
+	Order    int
+	Arena    [][]byte
+	Molecule [][]byte
 }
+
+// Arena represent a Levels arena
+type Arena [][]byte
+
+// Molecule represents a Levels molecule
+type Molecule [][]byte

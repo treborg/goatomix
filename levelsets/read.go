@@ -7,14 +7,38 @@ import (
 )
 
 // Read a json string
-func Read(fn string) {
+func Read(fn string) (LevelSet, error) {
+	var err error = nil
 	file, _ := ioutil.ReadFile(fn)
-	data := LevelSet{}
+	levelset := LevelSet{}
 
-	_ = json.Unmarshal([]byte(file), &data)
+	_ = json.Unmarshal([]byte(file), &levelset)
 
-	for i := 0; i < len(data.Levels); i++ {
-		fmt.Println("Name: ", data.Levels[i].Name)
-		fmt.Println("Id: ", data.Levels[i].ID)
+	for i, level := range levelset.Levels {
+
+		level.Order = i + 1
+
+		arena, ok1 := bytesToSlice(level.ArenaS)
+		level.Arena = Arena(arena)
+
+		mol, ok2 := bytesToSlice(level.MoleculeS)
+		level.Molecule = Molecule(mol)
+
+		if !(ok1 && ok2) {
+			err = fmt.Errorf("(%s)level: %d, rows in arenas or molecules must have the same length", fn, level.Order)
+		}
 	}
+	return levelset, err
+}
+
+func bytesToSlice(a []string) ([][]byte, bool) {
+	n := len(a[0])
+	o := make([][]byte, len(a), len(a))
+	for i, r := range a {
+		if n != len(r) {
+			return o, false
+		}
+		o[i] = []byte(r)
+	}
+	return o, true
 }

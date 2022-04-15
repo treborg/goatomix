@@ -1,9 +1,16 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/treborg/goatomix/levelsets"
 )
 
 func main() {
-	levelsets.Read("levels/draknek.json")
+	levelset, err := levelsets.Read("levels/draknek.json")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(len(levelset.Levels))
+
 }
