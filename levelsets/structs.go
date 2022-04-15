@@ -24,8 +24,5 @@ type Level struct {
 	Molecule [][]byte
 }
 
-// Arena represent a Levels arena
-type Arena [][]byte
-
 // Molecule represents a Levels molecule
 type Molecule [][]byte
