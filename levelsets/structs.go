@@ -1,5 +1,8 @@
 package levelsets
 
+// LevelSetMap is a map of LevelSet indexed by Name
+type LevelSetMap map[string]LevelSet
+
 // LevelSet a struct to hold a levelset.
 type LevelSet struct {
 	Name    string  `json:"name"`

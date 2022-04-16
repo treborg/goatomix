@@ -4,13 +4,20 @@ import (
 	"fmt"
 
 	"github.com/treborg/goatomix/levelsets"
+	"github.com/treborg/goatomix/sols"
 )
 
 func main() {
-	levelset, err := levelsets.Read("levels/draknek.json")
+	for k, v := range levelsets.Sets {
+		fmt.Printf("%s: %#v\n", k, len(v.Levels))
+	}
+
+	fmt.Println(" ")
+
+	solutions, err := sols.Read("sols/solutions.json")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(len(levelset.Levels))
+	fmt.Printf("%#v\n", solutions[1])
 
 }
