@@ -5,8 +5,19 @@ import (
 	"os"
 )
 
-// Solutions is a list of solutions.
-type Solutions []Solution
+// Solutions is a variable holding a list of Solution structs.
+var Solutions = SolutionList{}
+
+func init() {
+	sols, err := Load("sols/solutions.json")
+	if err != nil {
+		panic(err)
+	}
+	Solutions = sols
+}
+
+// SolutionList is a list of solutions.
+type SolutionList []Solution
 
 // Solution holds a solution.
 type Solution struct {
@@ -18,16 +29,16 @@ type Solution struct {
 	History  string `json:"history"`
 }
 
-// Read a json string
-func Read(fn string) (Solutions, error) {
+// Load a json string
+func Load(fn string) (SolutionList, error) {
 	var err error = nil
-	solutions := Solutions{}
-	file, err := os.ReadFile(fn)
+	solutions := SolutionList{}
+	sols, err := os.ReadFile(fn)
 	if err != nil {
 		return solutions, err
 	}
 
-	err = json.Unmarshal([]byte(file), &solutions)
+	err = json.Unmarshal([]byte(sols), &solutions)
 	if err != nil {
 		return solutions, err
 	}

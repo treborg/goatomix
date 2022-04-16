@@ -14,10 +14,7 @@ func main() {
 
 	fmt.Println(" ")
 
-	solutions, err := sols.Read("sols/solutions.json")
-	if err != nil {
-		panic(err)
-	}
+	solutions := sols.Solutions
 	fmt.Printf("%#v\n", solutions[1])
 
 }
