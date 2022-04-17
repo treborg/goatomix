@@ -11,10 +11,12 @@ func main() {
 	for k, v := range levelsets.Sets {
 		fmt.Printf("%s: %#v\n", k, len(v.Levels))
 	}
+	fmt.Println(len(sols.Solutions))
 
-	fmt.Println(" ")
+	fmt.Println("=================")
+}
 
-	solutions := sols.Solutions
-	fmt.Printf("%#v\n", solutions[1])
-
+func init() {
+	levelsets.LoadAll()
+	sols.LoadAll()
 }

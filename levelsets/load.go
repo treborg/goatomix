@@ -9,16 +9,26 @@ import (
 // Sets is a map of all currently loaded LevelSet
 var Sets = LevelSetMap{}
 
-func init() {
-	var err error
-	Sets, err = loadAll()
-	if err != nil {
-		panic(err)
-	}
+// LevelMap maps levelset name and ids to Level
+var LevelMap = map[string]Level{}
+
+// GetLevel returns a level from LevelSet 'name' with ID 'id'
+func GetLevel(name, id string) Level {
+	return LevelMap[name+"!"+id]
 }
 
-// loadAll avilable levelsets
-func loadAll() (LevelSetMap, error) {
+// GetArena returns Arena from LevelSet 'name' with ID 'id'
+func GetArena(name, id string) Arena {
+	key := name + "!" + id
+	level, ok := LevelMap[key]
+	if !ok {
+		panic(fmt.Errorf("No Key, LevelMap[%s!%s]", name, id))
+	}
+	return level.Arena
+}
+
+// LoadAll avilable levelsets
+func LoadAll() (LevelSetMap, error) {
 	names := []string{
 		"katomic", "original", "pack1", "mystery", "draknek",
 	}
@@ -39,26 +49,31 @@ func loadAll() (LevelSetMap, error) {
 func Load(fn string) (LevelSet, error) {
 	var err error = nil
 	file, _ := ioutil.ReadFile(fn)
-	levelset := LevelSet{}
+	set := LevelSet{}
 
-	_ = json.Unmarshal([]byte(file), &levelset)
+	_ = json.Unmarshal([]byte(file), &set)
 
-	for i, level := range levelset.Levels {
+	for i, level := range set.Levels {
 
 		level.Order = i + 1
 
-		a, ok1 := bytesToSlice(level.ArenaS)
+		a, okArena := bytesToSlice(level.ArenaS)
 
 		level.Arena = Arena(a)
 
-		m, ok2 := bytesToSlice(level.MoleculeS)
+		m, okMolecule := bytesToSlice(level.MoleculeS)
 		level.Molecule = Molecule(m)
 
-		if !(ok1 && ok2) {
+		if !(okArena && okMolecule) {
 			err = fmt.Errorf("Loading(%s) level: %d, rows in arenas or molecules must have the same length", fn, level.Order)
 		}
+		set.Levels[i] = level
+
+		key := set.Name + "!" + level.ID
+		LevelMap[key] = set.Levels[i]
+
 	}
-	return levelset, err
+	return set, err
 }
 
 func bytesToSlice(a []string) ([][]byte, bool) {
