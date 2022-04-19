@@ -21,11 +21,11 @@ func LoadAll() {
 	Solutions = sols
 	for _, s := range sols {
 		_, err := s.CheckHistory()
+
 		if err != nil {
 			panic(err)
 		}
 	}
-
 }
 
 // SolutionList is a list of solutions.
@@ -46,7 +46,7 @@ func (s Solution) CheckHistory() (int, error) {
 	hLen := len(s.History)
 	err := history.CheckHistory(s.LevelSet, s.ID, s.History)
 	if err != nil {
-		return hLen, fmt.Errorf("error in solution solution %s: %s ", s.UID, err)
+		return hLen, fmt.Errorf("error in solution %s: %s ", s.UID, err)
 	}
 	return hLen, nil
 }

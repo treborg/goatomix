@@ -24,7 +24,7 @@ func GetArena(name, id string) Arena {
 	if !ok {
 		panic(fmt.Errorf("No Key, LevelMap[%s!%s]", name, id))
 	}
-	return level.Arena
+	return level.Arena.Copy()
 }
 
 // LoadAll avilable levelsets
@@ -57,11 +57,11 @@ func Load(fn string) (LevelSet, error) {
 
 		level.Order = i + 1
 
-		a, okArena := bytesToSlice(level.ArenaS)
+		a, okArena := GridToBytes(level.ArenaS)
 
 		level.Arena = Arena(a)
 
-		m, okMolecule := bytesToSlice(level.MoleculeS)
+		m, okMolecule := GridToBytes(level.MoleculeS)
 		level.Molecule = Molecule(m)
 
 		if !(okArena && okMolecule) {
@@ -76,14 +76,16 @@ func Load(fn string) (LevelSet, error) {
 	return set, err
 }
 
-func bytesToSlice(a []string) ([][]byte, bool) {
-	n := len(a[0])
-	o := make([][]byte, len(a), len(a))
-	for i, r := range a {
-		if n != len(r) {
-			return o, false
+// GridToBytes converts grids from []string to [][]byte forms.
+func GridToBytes(s []string) ([][]byte, bool) {
+	n := len(s[0])
+	b := make([][]byte, len(s), len(s))
+	ok := true
+	for i, r := range s {
+		b[i] = []byte(r)
+		if n != len(b[i]) {
+			ok = false
 		}
-		o[i] = []byte(r)
 	}
-	return o, true
+	return b, ok
 }
