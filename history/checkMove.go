@@ -16,11 +16,8 @@ type Move struct {
 }
 
 // ApplyMove applies a move to a grid.
-func (m *Move) ApplyMove(grid levelsets.Arena) levelsets.Arena {
-
-	grid[m.ER][m.EC] = grid[m.SR][m.SC]
-	grid[m.SR][m.SC] = EMPTY
-
+func (m Move) ApplyMove(grid levelsets.Arena) levelsets.Arena {
+	grid[m.ER][m.EC], grid[m.SR][m.SC] = grid[m.SR][m.SC], EMPTY
 	return grid
 }
 
