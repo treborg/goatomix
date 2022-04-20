@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/treborg/goatomix/history"
+	"github.com/treborg/goatomix/levelsets"
 )
 
 // Solutions is a variable holding a list of Solution structs.
@@ -44,15 +45,13 @@ type Solution struct {
 // CheckHistory for this solutions is valid.
 func (s Solution) CheckHistory() (int, error) {
 	hLen := len(s.History)
-	err := history.CheckHistory(s.LevelSet, s.ID, s.History)
+	grid := levelsets.GetArena(s.LevelSet, s.ID)
+	err := history.CheckHistory(grid, s.History)
 	if err != nil {
 		return hLen, fmt.Errorf("error in solution %s: %s ", s.UID, err)
 	}
 	return hLen, nil
 }
-
-// History an object to hold a history.
-type History string
 
 // Load a json string
 func Load(fn string) (SolutionList, error) {

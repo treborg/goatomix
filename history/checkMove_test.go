@@ -41,6 +41,8 @@ func TestCheckMove(t *testing.T) {
 		"###########", //h
 	})
 
+	t.Logf("%v", grid)
+
 	cases := []struct {
 		Move string
 		RE   string
