@@ -21,7 +21,7 @@ func LoadAll() {
 	}
 	Solutions = sols
 	for _, s := range sols {
-		_, err := s.CheckHistory()
+		err := s.CheckHistory()
 
 		if err != nil {
 			panic(err)
@@ -43,14 +43,13 @@ type Solution struct {
 }
 
 // CheckHistory for this solutions is valid.
-func (s Solution) CheckHistory() (int, error) {
-	hLen := len(s.History)
+func (s Solution) CheckHistory() error {
 	grid := levelsets.GetArena(s.LevelSet, s.ID)
-	err := history.CheckHistory(grid, s.History)
+	err := s.History.CheckHistory(grid)
 	if err != nil {
-		return hLen, fmt.Errorf("error in solution %s: %s ", s.UID, err)
+		return fmt.Errorf("error in solution %s: %s ", s.UID, err)
 	}
-	return hLen, nil
+	return nil
 }
 
 // Load a json string

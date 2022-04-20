@@ -21,7 +21,7 @@ func (h History) HistoryList() []Move {
 }
 
 // CheckHistory is a method to verify that this history is valid.
-func CheckHistory(grid levelsets.Arena, h History) error {
+func (h History) CheckHistory(grid levelsets.Arena) error {
 
 	grid = grid.Copy()
 
