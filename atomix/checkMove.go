@@ -49,7 +49,7 @@ func isEmpty(c byte) bool {
 }
 
 //CheckMove - Check if a move is valid when applied to 'grid'.
-func CheckMove(grid Arena, m Move) error {
+func (m Move) CheckMove(grid Arena) error {
 
 	w, h := byte(len(grid[0])-1), byte(len(grid)-1)
 	if m.SC >= w || m.EC >= w || m.SR >= h || m.ER >= h {

@@ -29,7 +29,7 @@ func (h History) CheckHistory(grid Arena) error {
 	}
 
 	for _, m := range h.HistoryList() {
-		err := CheckMove(grid, m)
+		err := m.CheckMove(grid)
 		if err != nil {
 			return err
 		}
