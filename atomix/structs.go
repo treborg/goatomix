@@ -1,4 +1,4 @@
-package levelsets
+package atomix
 
 // LevelSetMap is a map of LevelSet indexed by Name
 type LevelSetMap map[string]LevelSet

@@ -1,9 +1,7 @@
-package history
+package atomix
 
 import (
 	"fmt"
-
-	"github.com/treborg/goatomix/levelsets"
 )
 
 // Move is a structure that holds a move.
@@ -16,7 +14,7 @@ type Move struct {
 }
 
 // ApplyMove applies a move to a grid.
-func (m Move) ApplyMove(grid levelsets.Arena) levelsets.Arena {
+func (m Move) ApplyMove(grid Arena) Arena {
 	grid[m.ER][m.EC], grid[m.SR][m.SC] = grid[m.SR][m.SC], EMPTY
 	return grid
 }
@@ -51,7 +49,7 @@ func isEmpty(c byte) bool {
 }
 
 //CheckMove - Check if a move is valid when applied to 'grid'.
-func CheckMove(grid levelsets.Arena, m Move) error {
+func CheckMove(grid Arena, m Move) error {
 
 	w, h := byte(len(grid[0])-1), byte(len(grid)-1)
 	if m.SC >= w || m.EC >= w || m.SR >= h || m.ER >= h {

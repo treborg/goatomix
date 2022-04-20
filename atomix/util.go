@@ -1,4 +1,4 @@
-package history
+package atomix
 
 // StringsToBytes converts []string to [][]byte - 'a'.
 func StringsToBytes(ss []string) [][]byte {

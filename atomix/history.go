@@ -1,9 +1,7 @@
-package history
+package atomix
 
 import (
 	"fmt"
-
-	"github.com/treborg/goatomix/levelsets"
 )
 
 // History container for history.
@@ -21,7 +19,7 @@ func (h History) HistoryList() []Move {
 }
 
 // CheckHistory is a method to verify that this history is valid.
-func (h History) CheckHistory(grid levelsets.Arena) error {
+func (h History) CheckHistory(grid Arena) error {
 
 	grid = grid.Copy()
 

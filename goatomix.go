@@ -3,12 +3,12 @@ package main
 import (
 	"fmt"
 
-	"github.com/treborg/goatomix/levelsets"
+	"github.com/treborg/goatomix/atomix"
 	"github.com/treborg/goatomix/sols"
 )
 
 func main() {
-	for k, v := range levelsets.Sets {
+	for k, v := range atomix.Sets {
 		fmt.Printf("%s: %#v\n", k, len(v.Levels))
 	}
 	fmt.Println(len(sols.Solutions))
@@ -17,6 +17,6 @@ func main() {
 }
 
 func init() {
-	levelsets.LoadAll()
-	sols.LoadAll()
+	atomix.LoadAllLevels()
+	sols.LoadAllSolutions()
 }

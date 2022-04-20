@@ -5,15 +5,37 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/treborg/goatomix/history"
-	"github.com/treborg/goatomix/levelsets"
+	"github.com/treborg/goatomix/atomix"
 )
 
 // Solutions is a variable holding a list of Solution structs.
 var Solutions = SolutionList{}
 
-// LoadAll solutions
-func LoadAll() {
+// SolutionList is a list of solutions.
+type SolutionList []Solution
+
+// Solution holds a solution.
+type Solution struct {
+	UID      string         `json:"uid"`
+	Date     string         `json:"date"`
+	LevelSet string         `json:"levelSet"`
+	ID       string         `json:"id"`
+	User     string         `json:"user"`
+	History  atomix.History `json:"history"`
+}
+
+// CheckHistory for this solutions is valid.
+func (s Solution) CheckHistory() error {
+	grid := atomix.GetArena(s.LevelSet, s.ID)
+	err := s.History.CheckHistory(grid)
+	if err != nil {
+		return fmt.Errorf("error in solution %s: %s ", s.UID, err)
+	}
+	return nil
+}
+
+// LoadAllSolutions from solutions.json
+func LoadAllSolutions() {
 
 	sols, err := Load("sols/solutions.json")
 	if err != nil {
@@ -27,29 +49,6 @@ func LoadAll() {
 			panic(err)
 		}
 	}
-}
-
-// SolutionList is a list of solutions.
-type SolutionList []Solution
-
-// Solution holds a solution.
-type Solution struct {
-	UID      string          `json:"uid"`
-	Date     string          `json:"date"`
-	LevelSet string          `json:"levelSet"`
-	ID       string          `json:"id"`
-	User     string          `json:"user"`
-	History  history.History `json:"history"`
-}
-
-// CheckHistory for this solutions is valid.
-func (s Solution) CheckHistory() error {
-	grid := levelsets.GetArena(s.LevelSet, s.ID)
-	err := s.History.CheckHistory(grid)
-	if err != nil {
-		return fmt.Errorf("error in solution %s: %s ", s.UID, err)
-	}
-	return nil
 }
 
 // Load a json string

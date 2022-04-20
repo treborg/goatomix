@@ -1,4 +1,4 @@
-package history
+package atomix
 
 import (
 	"fmt"
@@ -6,11 +6,10 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/treborg/goatomix/levelsets"
 )
 
 func sg(sGrid []string) [][]byte {
-	gGrid, _ := levelsets.GridToBytes(sGrid)
+	gGrid, _ := GridToBytes(sGrid)
 	return gGrid
 }
 func cases(s string) []byte {

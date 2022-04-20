@@ -1,4 +1,4 @@
-package levelsets
+package atomix
 
 import (
 	"encoding/json"
@@ -27,8 +27,8 @@ func GetArena(name, id string) Arena {
 	return level.Arena.Copy()
 }
 
-// LoadAll avilable levelsets
-func LoadAll() (LevelSetMap, error) {
+// LoadAllLevels from json levelsets
+func LoadAllLevels() (LevelSetMap, error) {
 	names := []string{
 		"katomic", "original", "pack1", "mystery", "draknek",
 	}

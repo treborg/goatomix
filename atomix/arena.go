@@ -1,4 +1,4 @@
-package levelsets
+package atomix
 
 import "bytes"
 
