@@ -35,7 +35,7 @@ func LoadAllLevels() (LevelSetMap, error) {
 
 	for _, v := range names {
 		fn := fmt.Sprintf("levels/%s.json", v)
-		levelSet, err := Load(fn)
+		levelSet, err := LoadLevels(fn)
 		if err != nil {
 			return Sets, err
 		}
@@ -45,8 +45,8 @@ func LoadAllLevels() (LevelSetMap, error) {
 	return Sets, nil
 }
 
-// Load a json file
-func Load(fn string) (LevelSet, error) {
+// LoadLevels from a json levelset file.
+func LoadLevels(fn string) (LevelSet, error) {
 	var err error = nil
 	file, _ := ioutil.ReadFile(fn)
 	set := LevelSet{}
@@ -55,25 +55,41 @@ func Load(fn string) (LevelSet, error) {
 
 	for i, level := range set.Levels {
 
-		level.Order = i + 1
-
-		a, okArena := GridToBytes(level.ArenaS)
-
-		level.Arena = Arena(a)
-
-		m, okMolecule := GridToBytes(level.MoleculeS)
-		level.Molecule = Molecule(m)
-
-		if !(okArena && okMolecule) {
-			err = fmt.Errorf("Loading(%s) level: %d, rows in arenas or molecules must have the same length", fn, level.Order)
+		err = fixLevel(i, &level)
+		if err != nil {
+			return set, fmt.Errorf("file: %s level:%d, %v", fn, i, err)
 		}
-		set.Levels[i] = level
 
 		key := set.Name + "!" + level.ID
-		LevelMap[key] = set.Levels[i]
+		LevelMap[key] = level
+		set.Levels[i] = level
+
+		//fmt.Printf("2 fixed level %d: %+v\n\n",
+		//	set.Levels[i].Order,
+		//	set.Levels[i].Arena,
+		//)
 
 	}
 	return set, err
+}
+
+// fixLevel
+func fixLevel(i int, level *Level) error {
+
+	level.Order = i
+
+	a, okArena := GridToBytes(level.ArenaS)
+
+	level.Arena = Arena(a)
+
+	m, okMolecule := GridToBytes(level.MoleculeS)
+	level.Molecule = Molecule(m)
+
+	if !(okArena && okMolecule) {
+		err := fmt.Errorf("rows in arenas or molecules must have the same length")
+		return err
+	}
+	return nil
 }
 
 // GridToBytes converts grids from []string to [][]byte forms.

@@ -33,20 +33,22 @@ func (s Solution) CheckHistory() error {
 }
 
 // LoadAllSolutions from solutions.json
-func LoadAllSolutions() {
+func LoadAllSolutions() error {
 
-	sols, err := LoadSolutions("sols/solutions.json")
+	solutions, err := LoadSolutions("sols/solutions.json")
 	if err != nil {
-		panic(err)
+		return err
 	}
-	Solutions = sols
-	for _, s := range sols {
+	Solutions = solutions
+	for i, s := range solutions {
 		err := s.CheckHistory()
 
 		if err != nil {
-			panic(err)
+			err := fmt.Errorf("solution %d: failed, %s", i, err)
+			return err
 		}
 	}
+	return nil
 }
 
 // LoadSolutions from a json file.

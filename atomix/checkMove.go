@@ -51,6 +51,9 @@ func isEmpty(c byte) bool {
 //CheckMove - Check if a move is valid when applied to 'grid'.
 func (m Move) CheckMove(grid Arena) error {
 
+	// fmt.Printf("Check Move: %+v \n", grid)
+	// return fmt.Errorf("check move break")
+
 	w, h := byte(len(grid[0])-1), byte(len(grid)-1)
 	if m.SC >= w || m.EC >= w || m.SR >= h || m.ER >= h {
 		return fmt.Errorf("bad move, out of bounds")
