@@ -74,7 +74,7 @@ func TestCheckMove(t *testing.T) {
 		msg := fmt.Sprintf("move %#v, error like: %s", move, re)
 
 		t.Run(msg, func(t *testing.T) {
-			err := CheckMove(grid, move)
+			err := move.CheckMove(grid)
 			if re == "" {
 				assert.Nilf(err, "move '%s', failed unexpectedly", move)
 				return
