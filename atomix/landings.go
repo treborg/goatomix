@@ -1,6 +1,8 @@
 package atomix
 
-import "fmt"
+import (
+	"fmt"
+)
 
 // Landings returns a list of landings produced by applying move to grid;
 func Landings(s Solution) {
@@ -16,5 +18,4 @@ func Landings(s Solution) {
 
 		results[i+1] = grid
 	}
-
 }

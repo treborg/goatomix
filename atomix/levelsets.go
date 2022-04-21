@@ -4,20 +4,21 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"sort"
 )
 
 // Sets is a map of all currently loaded LevelSet
 var Sets = LevelSetMap{}
 
 // LevelMap maps levelset name and ids to Level
-var LevelMap = map[string]Level{}
+var LevelMap = map[string]*Level{}
 
 // GetLevel returns a level from LevelSet 'name' with ID 'id'
-func GetLevel(name, id string) Level {
+func GetLevel(name, id string) *Level {
 	return LevelMap[name+"!"+id]
 }
 
-// GetArena returns Arena from LevelSet 'name' with ID 'id'
+// GetArena returns Arena from LevelSet 'name' with ID 'id'.
 func GetArena(name, id string) Arena {
 	key := name + "!" + id
 	level, ok := LevelMap[key]
@@ -55,7 +56,7 @@ func LoadLevels(fn string) (LevelSet, error) {
 
 	for i, level := range set.Levels {
 
-		err = fixLevel(i, &level)
+		err = fixLevel(i, level)
 		if err != nil {
 			return set, fmt.Errorf("file: %s level:%d, %v", fn, i, err)
 		}
@@ -79,7 +80,6 @@ func fixLevel(i int, level *Level) error {
 	level.Order = i
 
 	a, okArena := GridToBytes(level.ArenaS)
-
 	level.Arena = Arena(a)
 
 	m, okMolecule := GridToBytes(level.MoleculeS)
@@ -89,7 +89,29 @@ func fixLevel(i int, level *Level) error {
 		err := fmt.Errorf("rows in arenas or molecules must have the same length")
 		return err
 	}
+
+	level.AtomList = ScanGrid(level.Arena)
 	return nil
+}
+
+// ScanGrid finds position of each atom in the grid.
+func ScanGrid(grid Arena) *AtomList {
+
+	atoms := AtomList{}
+	for r, row := range grid {
+		for c, a := range row {
+			if !isAtom(a) {
+				continue
+			}
+			atom := AtomPos{a, byte(r), byte(c)}
+			atoms = append(atoms, atom)
+		}
+	}
+	sort.Sort(atoms)
+	x := make(AtomList, len(atoms))
+	copy(x, atoms)
+
+	return &x
 }
 
 // GridToBytes converts grids from []string to [][]byte forms.

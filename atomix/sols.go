@@ -32,7 +32,7 @@ func (s Solution) CheckHistory() error {
 	return nil
 }
 
-// LoadAllSolutions from solutions.json
+// LoadAllSolutions from and check validity of each solution.
 func LoadAllSolutions() error {
 
 	solutions, err := LoadSolutions("sols/solutions.json")

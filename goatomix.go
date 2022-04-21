@@ -15,6 +15,9 @@ func main() {
 	fmt.Println(len(atomix.Solutions))
 
 	fmt.Println("=================")
+
+	atoms := atomix.ScanGrid(atomix.GetArena("katomic", "23"))
+	fmt.Println("atoms,", atoms)
 }
 
 func init() {
