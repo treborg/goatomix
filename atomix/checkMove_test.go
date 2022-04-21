@@ -26,7 +26,11 @@ func TestCheckMove(t *testing.T) {
 	assert.False(isEmpty('A'), "want false, got true")
 	assert.False(isEmpty(' '), "want false, got true")
 	assert.True(isEmpty('.'), "want true, got false")
-
+	{
+		badGrid := Arena{}
+		err := NewMove("").CheckMove(badGrid)
+		assert.Error(err, "No error for bad grid")
+	}
 	grid := sg([]string{
 		/*
 		 abcdefghijk   */
@@ -39,8 +43,6 @@ func TestCheckMove(t *testing.T) {
 		"#.........#", //g
 		"###########", //h
 	})
-
-	t.Logf("%v", grid)
 
 	cases := []struct {
 		Move string

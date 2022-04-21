@@ -21,6 +21,9 @@ func (m Move) ApplyMove(grid Arena) Arena {
 
 // NewMove creates a new move struct from a string.
 func NewMove(move string) Move {
+	if len(move) < 4 {
+		move += "aaaa"
+	}
 	m := Move{
 		Move: move,
 		SR:   byte(move[0]) - 'a', // start row
@@ -51,10 +54,15 @@ func isEmpty(c byte) bool {
 //CheckMove - Check if a move is valid when applied to 'grid'.
 func (m Move) CheckMove(grid Arena) error {
 
-	// fmt.Printf("Check Move: %+v \n", grid)
-	// return fmt.Errorf("check move break")
+	var w, h byte
+	h = byte(len(grid) - 1)
+	if (h + 1) > 3 {
+		w = byte(len(grid[0]) - 1)
+	}
+	if (w + 1) < 4 {
+		return fmt.Errorf("checkMove grid too small")
+	}
 
-	w, h := byte(len(grid[0])-1), byte(len(grid)-1)
 	if m.SC >= w || m.EC >= w || m.SR >= h || m.ER >= h {
 		return fmt.Errorf("bad move, out of bounds")
 	}
