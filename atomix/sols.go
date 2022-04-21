@@ -1,11 +1,9 @@
-package sols
+package atomix
 
 import (
 	"encoding/json"
 	"fmt"
 	"os"
-
-	"github.com/treborg/goatomix/atomix"
 )
 
 // Solutions is a variable holding a list of Solution structs.
@@ -16,17 +14,17 @@ type SolutionList []Solution
 
 // Solution holds a solution.
 type Solution struct {
-	UID      string         `json:"uid"`
-	Date     string         `json:"date"`
-	LevelSet string         `json:"levelSet"`
-	ID       string         `json:"id"`
-	User     string         `json:"user"`
-	History  atomix.History `json:"history"`
+	UID      string  `json:"uid"`
+	Date     string  `json:"date"`
+	LevelSet string  `json:"levelSet"`
+	ID       string  `json:"id"`
+	User     string  `json:"user"`
+	History  History `json:"history"`
 }
 
 // CheckHistory for this solutions is valid.
 func (s Solution) CheckHistory() error {
-	grid := atomix.GetArena(s.LevelSet, s.ID)
+	grid := GetArena(s.LevelSet, s.ID)
 	err := s.History.CheckHistory(grid)
 	if err != nil {
 		return fmt.Errorf("error in solution %s: %s ", s.UID, err)
@@ -37,7 +35,7 @@ func (s Solution) CheckHistory() error {
 // LoadAllSolutions from solutions.json
 func LoadAllSolutions() {
 
-	sols, err := Load("sols/solutions.json")
+	sols, err := LoadSolutions("sols/solutions.json")
 	if err != nil {
 		panic(err)
 	}
@@ -51,8 +49,8 @@ func LoadAllSolutions() {
 	}
 }
 
-// Load a json string
-func Load(fn string) (SolutionList, error) {
+// LoadSolutions from a json file.
+func LoadSolutions(fn string) (SolutionList, error) {
 	var err error = nil
 	solutions := SolutionList{}
 	sols, err := os.ReadFile(fn)
