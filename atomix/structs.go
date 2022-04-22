@@ -62,3 +62,12 @@ func (a AtomList) Less(i int, j int) bool {
 	}
 	return a[i][2] < a[i][2]
 }
+
+// Copy an AtomList.
+func (a AtomList) Copy() AtomList {
+	newList := make(AtomList, len(a))
+	for i, v := range a {
+		newList[i] = AtomPos{v[0], v[1], v[2]}
+	}
+	return newList
+}

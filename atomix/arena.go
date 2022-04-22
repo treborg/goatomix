@@ -20,3 +20,14 @@ func (a *Arena) Copy() Arena {
 	}
 	return Arena(newRows)
 }
+
+// Clear removes all atoms from an arena.
+func (a *Arena) Clear() {
+	for r, row := range *a {
+		for c, sq := range row {
+			if isAtom(sq) {
+				(*a)[r][c] = EMPTY
+			}
+		}
+	}
+}
