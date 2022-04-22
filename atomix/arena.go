@@ -31,3 +31,11 @@ func (a *Arena) Clear() {
 		}
 	}
 }
+
+// ApplyAtoms cleans the arena and populates it with atoms from an AtomList.
+func (a *Arena) ApplyAtoms(atoms AtomList) {
+	a.Clear()
+	for _, atom := range atoms {
+		(*a)[atom.R][atom.C] = atom.A
+	}
+}

@@ -29,7 +29,7 @@ func GetArena(name, id string) Arena {
 }
 
 // LoadAllLevels from json levelsets
-func LoadAllLevels() (LevelSetMap, error) {
+func LoadAllLevels() error {
 	names := []string{
 		"katomic", "original", "pack1", "mystery", "draknek",
 	}
@@ -38,16 +38,17 @@ func LoadAllLevels() (LevelSetMap, error) {
 		fn := fmt.Sprintf("levels/%s.json", v)
 		levelSet, err := LoadLevels(fn)
 		if err != nil {
-			return Sets, err
+			return err
 		}
 		Sets[levelSet.Name] = levelSet
 	}
 
-	return Sets, nil
+	return nil
 }
 
 // LoadLevels from a json levelset file.
 func LoadLevels(fn string) (LevelSet, error) {
+
 	var err error = nil
 	file, _ := ioutil.ReadFile(fn)
 	set := LevelSet{}
@@ -95,7 +96,7 @@ func fixLevel(i int, level *Level) error {
 }
 
 // ScanGrid finds position of each atom in the grid.
-func ScanGrid(grid Arena) *AtomList {
+func ScanGrid(grid Arena) AtomList {
 
 	atoms := AtomList{}
 	for r, row := range grid {
@@ -111,7 +112,7 @@ func ScanGrid(grid Arena) *AtomList {
 	x := make(AtomList, len(atoms))
 	copy(x, atoms)
 
-	return &x
+	return x
 }
 
 // GridToBytes converts grids from []string to [][]byte forms.

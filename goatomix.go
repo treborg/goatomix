@@ -20,13 +20,23 @@ func main() {
 	atoms := atomix.ScanGrid(arena)
 	fmt.Println("atoms,", atoms)
 
+	xatoms := atoms.Copy()
+
+	xatoms[0] = atomix.AtomPos{}
+	xatoms[1].R = 0x99
+
+	fmt.Println("atoms,", atoms[:2])
+	fmt.Println("xatoms,", xatoms[:2])
+
+	fmt.Println("=================")
+
 	fmt.Println(arena.String())
 	arena.Clear()
 	fmt.Println(arena.String())
 }
 
 func init() {
-	_, err := atomix.LoadAllLevels()
+	err := atomix.LoadAllLevels()
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -25,7 +25,7 @@ type Level struct {
 	Order    int
 	Arena    Arena
 	Molecule Molecule
-	AtomList *AtomList
+	AtomList AtomList
 }
 
 // Molecule represents a Levels molecule
@@ -33,9 +33,13 @@ type Molecule [][]byte
 
 // AtomPos describes the type and position of an atom in an a grid.
 //
-//  It is a three byte slice [type, row, col]
-//
-type AtomPos []byte
+//  It is a three byte struct {[type, row, col}
+//s
+type AtomPos struct {
+	A byte
+	R byte
+	C byte
+}
 
 // AtomList is a slice of AtomPos
 type AtomList []AtomPos
@@ -53,21 +57,21 @@ func (a AtomList) Swap(i int, j int) {
 // Less compares one element with another.
 func (a AtomList) Less(i int, j int) bool {
 
-	if a[i][0] != a[j][0] {
-		return a[i][0] < a[j][0]
+	if a[i].A != a[j].A {
+		return a[i].A < a[j].A
 	}
 
-	if a[i][1] != a[j][1] {
-		return a[i][1] < a[j][1]
+	if a[i].R != a[j].R {
+		return a[i].R < a[j].R
 	}
-	return a[i][2] < a[i][2]
+	return a[i].C < a[i].C
 }
 
 // Copy an AtomList.
 func (a AtomList) Copy() AtomList {
 	newList := make(AtomList, len(a))
 	for i, v := range a {
-		newList[i] = AtomPos{v[0], v[1], v[2]}
+		newList[i] = v
 	}
 	return newList
 }
