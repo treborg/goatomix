@@ -1,6 +1,9 @@
 package atomix
 
-import "bytes"
+import (
+	"bytes"
+	"sort"
+)
 
 // Arena represent a Levels arena
 type Arena [][]byte
@@ -32,10 +35,30 @@ func (a *Arena) Clear() {
 	}
 }
 
-// ApplyAtoms cleans the arena and populates it with atoms from an AtomList.
+// ApplyAtoms from an AtomList to a clean areana
 func (a *Arena) ApplyAtoms(atoms AtomList) {
 	a.Clear()
 	for _, atom := range atoms {
 		(*a)[atom.R][atom.C] = atom.A
 	}
+}
+
+// ScanGrid finds position of each atom in the grid.
+func (a *Arena) ScanGrid() AtomList {
+
+	atoms := AtomList{}
+	for r, row := range *a {
+		for c, sq := range row {
+			if !isAtom(sq) {
+				continue
+			}
+			atom := AtomPos{sq, byte(r), byte(c)}
+			atoms = append(atoms, atom)
+		}
+	}
+	sort.Sort(atoms)
+	atomList := make(AtomList, len(atoms))
+	copy(atomList, atoms)
+
+	return atomList
 }

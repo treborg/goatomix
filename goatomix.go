@@ -17,7 +17,7 @@ func main() {
 	fmt.Println("=================")
 
 	arena := atomix.GetArena("katomic", "83")
-	atoms := atomix.ScanGrid(arena)
+	atoms := arena.ScanGrid()
 	fmt.Println("atoms,", atoms)
 
 	xatoms := atoms.Copy()

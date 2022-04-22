@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"sort"
 )
 
 // Sets is a map of all currently loaded LevelSet
@@ -91,28 +90,8 @@ func fixLevel(i int, level *Level) error {
 		return err
 	}
 
-	level.AtomList = ScanGrid(level.Arena)
+	level.AtomList = level.Arena.ScanGrid()
 	return nil
-}
-
-// ScanGrid finds position of each atom in the grid.
-func ScanGrid(grid Arena) AtomList {
-
-	atoms := AtomList{}
-	for r, row := range grid {
-		for c, a := range row {
-			if !isAtom(a) {
-				continue
-			}
-			atom := AtomPos{a, byte(r), byte(c)}
-			atoms = append(atoms, atom)
-		}
-	}
-	sort.Sort(atoms)
-	x := make(AtomList, len(atoms))
-	copy(x, atoms)
-
-	return x
 }
 
 // GridToBytes converts grids from []string to [][]byte forms.
