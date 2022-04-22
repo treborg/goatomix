@@ -13,12 +13,6 @@ type Move struct {
 	ER   byte
 }
 
-// ApplyMove applies a move to a grid.
-func (m Move) ApplyMove(grid Arena) Arena {
-	grid[m.ER][m.EC], grid[m.SR][m.SC] = grid[m.SR][m.SC], EMPTY
-	return grid
-}
-
 // NewMove creates a new move struct from a string.
 func NewMove(move string) Move {
 	if len(move) < 4 {

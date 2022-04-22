@@ -24,7 +24,7 @@ func (a *Arena) Copy() Arena {
 	return Arena(newRows)
 }
 
-// Clear removes all atoms from an arena.
+// Clear removes all atoms from an arena (in place).
 func (a *Arena) Clear() {
 	for r, row := range *a {
 		for c, sq := range row {
@@ -35,7 +35,13 @@ func (a *Arena) Clear() {
 	}
 }
 
-// ApplyAtoms from an AtomList to a clean areana
+// ApplyMove applies a move to a grid in place.
+func (a *Arena) ApplyMove(m Move) {
+	grid := *a
+	grid[m.ER][m.EC], grid[m.SR][m.SC] = grid[m.SR][m.SC], EMPTY
+}
+
+// ApplyAtoms from an AtomList to a clean areana (in place)
 func (a *Arena) ApplyAtoms(atoms AtomList) {
 	a.Clear()
 	for _, atom := range atoms {

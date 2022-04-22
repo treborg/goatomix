@@ -33,7 +33,7 @@ func (h History) CheckHistory(grid Arena) error {
 		if err != nil {
 			return err
 		}
-		m.ApplyMove(grid)
+		grid.ApplyMove(m)
 	}
 	return nil
 }

@@ -10,9 +10,14 @@ import (
 func main() {
 	for k, v := range atomix.Sets {
 		fmt.Printf("%s: %#v\n", k, len(v.Levels))
-
 	}
 	fmt.Println(len(atomix.Solutions))
+
+	items := atomix.Landings(atomix.Solutions[0])
+	for i, a := range items {
+		fmt.Println(a.String())
+		fmt.Println(i, "===")
+	}
 
 	fmt.Println("=================")
 
