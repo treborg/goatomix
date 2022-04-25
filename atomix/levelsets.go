@@ -28,13 +28,14 @@ func GetArena(name, id string) Arena {
 }
 
 // LoadAllLevels from json levelsets
-func LoadAllLevels() error {
+func LoadAllLevels(prefix string) error {
 	names := []string{
 		"katomic", "original", "pack1", "mystery", "draknek",
 	}
 
 	for _, v := range names {
-		fn := fmt.Sprintf("levels/%s.json", v)
+		fn := fmt.Sprintf("%s/%s.json", prefix, v)
+
 		levelSet, err := LoadLevels(fn)
 		if err != nil {
 			return err
@@ -90,7 +91,7 @@ func fixLevel(i int, level *Level) error {
 		return err
 	}
 
-	level.AtomList = level.Arena.ScanGrid()
+	level.AtomList = level.Arena.FindAtoms()
 	return nil
 }
 
