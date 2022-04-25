@@ -23,8 +23,8 @@ type Solution struct {
 }
 
 // CheckHistory for this solutions is valid.
-func (s Solution) CheckHistory() error {
-	grid := GetArena(s.LevelSet, s.ID)
+func (s *Solution) CheckHistory() error {
+	grid := s.GetArena()
 	err := s.History.CheckHistory(grid)
 	if err != nil {
 		return fmt.Errorf("error in solution %s: %s ", s.UID, err)
@@ -32,10 +32,15 @@ func (s Solution) CheckHistory() error {
 	return nil
 }
 
-// LoadAllSolutions from and check validity of each solution.
-func LoadAllSolutions() error {
+// GetArena referenced by this Solution.
+func (s *Solution) GetArena() Arena {
+	return GetArena(s.LevelSet, s.ID)
+}
 
-	solutions, err := LoadSolutions("sols/solutions.json")
+// LoadAllSolutions from and check validity of each solution.
+func LoadAllSolutions(fn string) error {
+
+	solutions, err := LoadSolutions(fn)
 	if err != nil {
 		return err
 	}

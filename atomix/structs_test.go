@@ -21,14 +21,16 @@ var SArena = []string{
 }
 
 func TestAtomixListCopy(t *testing.T) {
+
 	assert := assert.New(t)
+
 	a, ok := GridToBytes(SArena)
 	if !ok {
 		t.Fatal()
 	}
 	arena := Arena(a)
 
-	atoms := ScanGrid(arena)
+	atoms := arena.FindAtoms()
 
 	xatoms := atoms.Copy()
 	xatoms[0] = AtomPos{}
