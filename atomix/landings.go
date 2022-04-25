@@ -81,28 +81,12 @@ func AtomListPrint(vv []AtomList) {
 	}
 }
 
-// AtomListEqual compares 'other' with
-func AtomListEqual(this, other AtomList) bool {
-	if len(this) != len(other) {
-		return false
-	}
-	for i, thisPos := range this {
-		otherPos := other[i]
-		if thisPos.C != otherPos.C ||
-			thisPos.R != otherPos.R ||
-			thisPos.A != otherPos.A {
-			return false
-		}
-	}
-	return true
-}
-
 // FindMatchNext finds repeated landings.
 func FindMatchNext(lands []AtomList) int {
 
 	for j := len(lands) - 1; j > 0; j-- {
 		//if reflect.DeepEqual(lands[0], lands[j]) {
-		if AtomListEqual(lands[0], lands[j]) {
+		if lands[0].Equal(lands[j]) {
 			return j
 		}
 	}
