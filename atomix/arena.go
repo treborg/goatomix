@@ -36,24 +36,23 @@ func (a *Arena) Clear() {
 }
 
 // ApplyMove applies a move to a grid in place.
-func (a *Arena) ApplyMove(m Move) {
-	grid := *a
-	grid[m.ER][m.EC], grid[m.SR][m.SC] = grid[m.SR][m.SC], EMPTY
+func (a Arena) ApplyMove(m Move) {
+	a[m.ER][m.EC], a[m.SR][m.SC] = a[m.SR][m.SC], EMPTY
 }
 
 // ApplyAtoms from an AtomList to a clean areana (in place)
-func (a *Arena) ApplyAtoms(atoms AtomList) {
+func (a Arena) ApplyAtoms(atoms AtomList) {
 	a.Clear()
 	for _, atom := range atoms {
-		(*a)[atom.R][atom.C] = atom.A
+		a[atom.R][atom.C] = atom.A
 	}
 }
 
-// ScanGrid finds position of each atom in the grid.
-func (a *Arena) ScanGrid() AtomList {
+// FindAtoms returns a sorted list of atoms and their position.
+func (a Arena) FindAtoms() AtomList {
 
 	atoms := AtomList{}
-	for r, row := range *a {
+	for r, row := range a {
 		for c, sq := range row {
 			if !isAtom(sq) {
 				continue
