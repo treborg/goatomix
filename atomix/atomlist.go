@@ -4,12 +4,12 @@ import "sort"
 
 // AtomPos describes the type and position of an atom in an arena.
 type AtomPos struct {
-	A byte
-	R byte
-	C byte
+	A byte // atom type
+	R byte // row
+	C byte // col
 }
 
-// AtomList is a list of all atoms and ther positions in an arena
+// AtomList is a sorted list of all atoms and their positions in an Arena.
 type AtomList []AtomPos
 
 // ApplyMove modifies (in place) the positon of the atoms

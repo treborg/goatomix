@@ -52,21 +52,37 @@ func CleanLandingsAll() {
 	count := 0
 	for _, s := range Solutions[:] {
 		landings := AtomLandings(s)
-		saved := CleanLandings(landings)
-		if saved == 0 {
+		_, lands := CleanLandings(landings)
+		nCuts := len(landings) - len(lands)
+		if nCuts == 0 {
 			count++
 			continue
 		}
-		fmt.Printf("%d=== %s %s:%s===\n", saved, s.UID, s.LevelSet, s.ID)
+		fmt.Printf("%d=== %s %s:%s===\n", nCuts, s.UID, s.LevelSet, s.ID)
 	}
-	fmt.Println("no change", count)
+	fmt.Println("cuts:", count)
 
 }
 
+/*//  u
+func
+	grid := s.GetArena()
+	h := s.HistoryList()
+	landings := AtomLandings(s)
+
+}
+
+//*/
+
 // CleanLandings cuts out redundant moves in a solution.
-func CleanLandings(lands []AtomList) int {
+func CleanLandings(landings []AtomList) ([]int, []AtomList) {
+	index := make([]int, len(landings))
+	lands := make([]AtomList, len(landings))
+	for i, atoms := range landings {
+		index[i] = i
+		lands[i] = atoms
+	}
 	end := len(lands)
-	inputLength := end
 	i := -1
 	for {
 		i++
@@ -75,6 +91,7 @@ func CleanLandings(lands []AtomList) int {
 		for {
 			j--
 			if want.Equal(lands[j]) {
+				copy(index[i:], index[j:end])
 				copy(lands[i:], lands[j:end])
 				end = end - (j - i)
 				break
@@ -87,7 +104,7 @@ func CleanLandings(lands []AtomList) int {
 			break
 		}
 	}
-	return inputLength - end
+	return index[:end], lands[:end]
 }
 
 // AtomListPrint prints an atomList one atom per line.
