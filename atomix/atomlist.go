@@ -38,7 +38,7 @@ func (a AtomList) Swap(i int, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
-// Equal compares 'other' with
+// Equal compares two AtomLists for equality.
 func (a AtomList) Equal(other AtomList) bool {
 	if len(a) != len(other) {
 		return false

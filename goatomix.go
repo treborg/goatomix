@@ -17,7 +17,7 @@ func main() {
 	//tems := atomix.Landings(atomix.Solutions[0])
 	//	_ = atomix.AtomLandings()
 	//s = atomix.FindSolution("fHhLnZxP")
-	atomix.X()
+	atomix.CleanLandingsAll()
 }
 
 func init() {
