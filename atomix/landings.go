@@ -6,7 +6,7 @@ import (
 
 // Landings returns a list of landings produced by applying move to grid;
 func Landings(s Solution) []Arena {
-	h := s.History.HistoryList()
+	h := s.History.HistoryMoves()
 	results := make([]Arena, len(h)+1)
 	grid := GetArena(s.LevelSet, s.ID)
 
@@ -21,7 +21,7 @@ func Landings(s Solution) []Arena {
 
 // AtomLandings returns a list of landings as an []AtomList
 func AtomLandings(s Solution) []AtomList {
-	h := s.History.HistoryList()
+	h := s.History.HistoryMoves()
 	results := make([]AtomList, len(h)+1)
 	grid := s.GetArena()
 
@@ -64,11 +64,19 @@ func CleanLandingsAll() {
 
 }
 
-/*//  u
-func
+/*// CheckCleanLandings checks atom landings produce a valid solution.
+func CheckCleanLandings(s){
 	grid := s.GetArena()
-	h := s.HistoryList()
+	h := s.HistoryMoves()
 	landings := AtomLandings(s)
+
+	index, lands := CleanLandings(landings)
+	nhl := []Moves{}
+	for _, p:= range index
+		nhl = append(nhl, lands[p])
+	}
+	sHistory := nhl.ToHistory()
+	sHistory.CheckHistory(
 
 }
 
@@ -112,16 +120,4 @@ func alp(vv []AtomList) {
 	for i, v := range vv {
 		fmt.Println(i, v)
 	}
-}
-
-// FindMatchNext finds repeated landings.
-func FindMatchNext(lands []AtomList) int {
-
-	for j := len(lands) - 1; j > 0; j-- {
-		//if reflect.DeepEqual(lands[0], lands[j]) {
-		if lands[0].Equal(lands[j]) {
-			return j
-		}
-	}
-	return 0
 }

@@ -7,8 +7,8 @@ import (
 // History container for history.
 type History string
 
-// HistoryList method converts History to []Move.
-func (h History) HistoryList() []Move {
+// HistoryMoves method converts History to []Move.
+func (h History) HistoryMoves() []Move {
 	sh := string(h)
 	moves := make([]Move, 0, len(h)/4)
 	for i := 0; i < len(h); i += 4 {
@@ -28,7 +28,7 @@ func (h History) CheckHistory(grid Arena) error {
 		return fmt.Errorf(msg, len(h), h)
 	}
 
-	for _, m := range h.HistoryList() {
+	for _, m := range h.HistoryMoves() {
 		err := m.CheckMove(grid)
 		if err != nil {
 			return err
