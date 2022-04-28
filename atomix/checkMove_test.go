@@ -12,13 +12,6 @@ func sg(sGrid []string) [][]byte {
 	gGrid, _ := GridToBytes(sGrid)
 	return gGrid
 }
-func cases(s string) []byte {
-	bb := []byte(s)
-	for i, b := range bb {
-		bb[i] = b - 'a'
-	}
-	return bb
-}
 
 func TestCheckMove(t *testing.T) {
 	assert := assert.New(t)

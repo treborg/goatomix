@@ -2,13 +2,14 @@ package atomix
 
 import (
 	"fmt"
+	"log"
 )
 
-// Landings returns a list of landings produced by applying move to grid;
+// Landings returns a list of landings as a []Array;
 func Landings(s Solution) []Arena {
-	h := s.History.HistoryMoves()
+	h := s.ToMoveList()
 	results := make([]Arena, len(h)+1)
-	grid := GetArena(s.LevelSet, s.ID)
+	grid := s.GetArena()
 
 	results[0] = grid
 	for i, move := range h {
@@ -19,9 +20,9 @@ func Landings(s Solution) []Arena {
 	return results
 }
 
-// AtomLandings returns a list of landings as an []AtomList
+// AtomLandings returns a list of landings as a []AtomList
 func AtomLandings(s Solution) []AtomList {
-	h := s.History.HistoryMoves()
+	h := s.ToMoveList()
 	results := make([]AtomList, len(h)+1)
 	grid := s.GetArena()
 
@@ -37,60 +38,65 @@ func AtomLandings(s Solution) []AtomList {
 	return results
 }
 
-// FindSolution finds solution by its UID
-func FindSolution(uid string) Solution {
-	for _, s := range Solutions {
-		if s.UID == uid {
-			return s
-		}
-	}
-	return Solutions[0]
-}
-
-// CleanLandingsAll cuts out redundant moves in all solutions.
-func CleanLandingsAll() {
+// CleanHistoryAll cuts out redundant moves for all solutions.
+func CleanHistoryAll() {
 	count := 0
-	for _, s := range Solutions[:] {
-		landings := AtomLandings(s)
-		_, lands := CleanLandings(landings)
-		nCuts := len(landings) - len(lands)
+	sols := GetSolutions()
+
+	fmt.Println("Got solutions ", len(sols))
+
+	for _, s := range sols {
+		sLen := len(s.History) / 4
+		sClean, err := CleanHistory(s)
+		if err != nil {
+			log.Fatal(err)
+		}
+		lenClean := len(sClean.History) / 4
+		nCuts := sLen - lenClean
 		if nCuts == 0 {
-			count++
 			continue
 		}
-		fmt.Printf("%d=== %s %s:%s===\n", nCuts, s.UID, s.LevelSet, s.ID)
+		count++
+		fmt.Printf("%03d %03d === %s %s:%s===\n", nCuts, sLen, s.UID, s.LevelSet, s.ID)
 	}
 	fmt.Println("cuts:", count)
 
 }
 
-/*// CheckCleanLandings checks atom landings produce a valid solution.
-func CheckCleanLandings(s){
-	grid := s.GetArena()
-	h := s.HistoryMoves()
+//*/
+
+// CleanHistory removes redundant moves.
+func CleanHistory(s Solution) (Solution, error) {
+
 	landings := AtomLandings(s)
+	index := CleanLandings(landings)
 
-	index, lands := CleanLandings(landings)
-	nhl := []Moves{}
-	for _, p:= range index
-		nhl = append(nhl, lands[p])
+	moves := s.ToMoveList()
+	newMoves := make(MoveList, len(index))
+
+	for i, m := range index {
+		newMoves[i] = moves[m]
 	}
-	sHistory := nhl.ToHistory()
-	sHistory.CheckHistory(
+	s.History = newMoves.ToHistory()
 
+	err := s.CheckHistory()
+	if err != nil {
+		return s, err
+	}
+	return s, nil
 }
 
 //*/
 
 // CleanLandings cuts out redundant moves in a solution.
-func CleanLandings(landings []AtomList) ([]int, []AtomList) {
+func CleanLandings(landings []AtomList) []int {
 	index := make([]int, len(landings))
 	lands := make([]AtomList, len(landings))
 	for i, atoms := range landings {
 		index[i] = i
 		lands[i] = atoms
 	}
-	end := len(lands)
+	end := len(lands) - 1
 	i := -1
 	for {
 		i++
@@ -112,12 +118,5 @@ func CleanLandings(landings []AtomList) ([]int, []AtomList) {
 			break
 		}
 	}
-	return index[:end], lands[:end]
-}
-
-// AtomListPrint prints an atomList one atom per line.
-func alp(vv []AtomList) {
-	for i, v := range vv {
-		fmt.Println(i, v)
-	}
+	return index[:end]
 }

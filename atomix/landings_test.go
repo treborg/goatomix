@@ -14,7 +14,7 @@ func TestAtomLandings(t *testing.T) {
 	err := LoadAllLevels("../levels")
 	assert.Nil(err, "cant load files")
 
-	solutions, err := LoadSolutions("../sols/solutions.json")
+	solutions, err := LoadRawSolutions("../sols/solutions.json")
 	if err != nil {
 		t.Fatal(err)
 	}
