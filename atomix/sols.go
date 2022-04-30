@@ -9,10 +9,7 @@ import (
 )
 
 // Solutions is a variable holding a list of Solution structs.
-var Solutions = SolutionList{}
-
-// SolutionList is a list of solutions.
-type SolutionList []Solution
+var Solutions = []Solution{}
 
 // Solution holds a solution.
 type Solution struct {
@@ -35,7 +32,7 @@ func NewSolution(levelSet, id string, history History) Solution {
 }
 
 // GetSolutions returns the list of solutions.
-func GetSolutions() SolutionList {
+func GetSolutions() []Solution {
 	return Solutions
 }
 
@@ -71,30 +68,10 @@ func (s *Solution) GetArena() Arena {
 	return GetArena(s.LevelSet, s.ID)
 }
 
-// LoadSolutions from a file and check the validity of
-// each solutions History.
-func LoadSolutions(fn string) error {
-
-	solutions, err := LoadRawSolutions(fn)
-	if err != nil {
-		return err
-	}
-	Solutions = solutions
-	for i, s := range solutions {
-		err := s.CheckHistory()
-
-		if err != nil {
-			err := fmt.Errorf("invalid solution %d from '%s', %s", i, fn, err)
-			return err
-		}
-	}
-	return nil
-}
-
 // LoadRawSolutions from a json file.
-func LoadRawSolutions(fn string) (SolutionList, error) {
+func LoadRawSolutions(fn string) ([]Solution, error) {
 	var err error = nil
-	solutions := SolutionList{}
+	solutions := []Solution{}
 	sols, err := os.ReadFile(fn)
 	if err != nil {
 		return solutions, err
@@ -109,11 +86,13 @@ func LoadRawSolutions(fn string) (SolutionList, error) {
 	return solutions, err
 }
 
+// LineVisitor type of function that visits lines of a file.
+type LineVisitor func(int, []byte) error
+
 // WriteSolutions writes List of solutions in jsonl style
-func WriteSolutions(fn string, ss SolutionList) error {
+func WriteSolutions(fn string, ss []Solution) error {
 
 	file, err := os.OpenFile(fn, os.O_WRONLY|os.O_CREATE, 0666)
-
 	if err != nil {
 		return err
 	}
@@ -133,6 +112,79 @@ func WriteSolutions(fn string, ss SolutionList) error {
 		if err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+// LoadSolutions from a file and check the validity of
+// each solutions History.
+func LoadSolutions(fn string) error {
+
+	solutions, err := LoadRawSolutions(fn)
+	if err != nil {
+		return err
+	}
+	Solutions = solutions
+	for i, s := range solutions {
+		err := s.CheckHistory()
+
+		if err != nil {
+			err := fmt.Errorf("Checkhistory failed %d from '%s', %s", i, fn, err)
+			return err
+		}
+	}
+	return nil
+}
+
+// ReadSolutionsFromFile returns []Solution from a json lines file.
+func ReadSolutionsFromFile(fn string) ([]Solution, error) {
+	ss := make([]Solution, 0)
+	err := VisitLines(fn, SolutionsVisitor(&ss))
+	return ss, err
+}
+
+// SolutionsVisitor appends a json solution to a []Solution
+func SolutionsVisitor(ss *[]Solution) LineVisitor {
+
+	SolutionFromJSON := func(ln int, b []byte) error {
+		s := Solution{}
+
+		err := json.Unmarshal(b, &s)
+		if err != nil {
+			return fmt.Errorf("Line %d, %v", ln, err)
+		}
+		*ss = append(*ss, s)
+		return nil
+	}
+	return SolutionFromJSON
+}
+
+// VisitLines applies a supplied visitor function to each line in a file.
+func VisitLines(fn string, visit LineVisitor) error {
+	file, err := os.Open(fn)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	ln := -1
+	for {
+		ln++
+		if !scanner.Scan() {
+			break
+		}
+		b := scanner.Bytes()
+
+		// VISITOR
+		err := visit(ln, b)
+		if err != nil {
+			return fmt.Errorf("line %d, %v", ln, err)
+		}
+	}
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("line %d: %v", ln, err)
 	}
 	return nil
 }
