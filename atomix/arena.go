@@ -17,9 +17,8 @@ func (a *Arena) String() string {
 func (a *Arena) Copy() Arena {
 	newRows := make([][]byte, len(*a))
 	for i, row := range *a {
-		newRow := make([]byte, len(row))
-		copy(newRow, (*a)[i])
-		newRows[i] = newRow
+		newRow := []byte{}
+		newRows[i] = append(newRow, row...)
 	}
 	return Arena(newRows)
 }
@@ -62,8 +61,6 @@ func (a Arena) FindAtoms() AtomList {
 		}
 	}
 	sort.Sort(atoms)
-	atomList := make(AtomList, len(atoms))
-	copy(atomList, atoms)
 
-	return atomList
+	return atoms
 }
