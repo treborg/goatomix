@@ -11,9 +11,10 @@ func TestReadSolutionFromFile(t *testing.T) {
 		}
 	})
 
-	for _, s := range ss {
-		t.Logf("%+v\n", s)
-	}
+	//for _, s := range ss {
+	//	t.Logf("%+v\n", s)
+	//}
+
 	t.Run("should return at least 1 solution", func(t *testing.T) {
 		if len(ss) < 1 {
 			t.Error("No results")
